@@ -1,9 +1,6 @@
-﻿using System;
-using MinotaurLabyrinth.Commands;
-
-namespace MinotaurLabyrinth
+﻿namespace MinotaurLabyrinth
 {
-    // The minotaur labyrinth game. Tracks the progression of a single round of gameplay.
+    // The Minotaur Labyrinth game. Tracks the progression of a single round of gameplay.
     public class LabyrinthGame
     {
         // The map being used by the game.
@@ -15,7 +12,7 @@ namespace MinotaurLabyrinth
         // Looks up what room type the player is currently in.
         public Room CurrentRoom => Map.GetRoomAtLocation(Hero.Location);
 
-        // Initializes a new game round with a specific map and player.
+        // Initializes a new game round with a specific map size and seed.
         public LabyrinthGame(Size mapSize, int seed)
         {
             RandomNumberGenerator.SetSeed(seed);
@@ -26,36 +23,41 @@ namespace MinotaurLabyrinth
         public void Run()
         {
             Display.ScreenUpdate(Hero, Map);
+
             // This is the game loop. Each turn runs through this while loop once.
             while (!Hero.IsVictorious && Hero.IsAlive)
             {
                 ICommand command = GetCommand();
                 Console.Clear();
+
                 if (Hero.IsAlive) // Player did not quit the game
                 {
                     command.Execute(Hero, Map);
                     Location currentLocation = Hero.Location;
                     CurrentRoom.Activate(Hero, Map);
-                    // If the room interaction moves the player
-                    // Activate the room the player has been moved to
+
+                    // If the room interaction moves the player, activate the room the player has been moved to
                     while (currentLocation != Hero.Location)
                     {
                         currentLocation = Hero.Location;
                         CurrentRoom.Activate(Hero, Map);
                     }
                 }
+
                 Display.ScreenUpdate(Hero, Map);
             }
+
             if (Hero.IsVictorious)
-                ConsoleHelper.WriteLine("You have claimed the magic sword, and you have escaped with your life!\nYou win!", ConsoleColor.DarkGreen);
+                ConsoleHelper.WriteLine("You have claimed the magic sword and you have escaped with your life!\nYou win!", ConsoleColor.DarkGreen);
             else
                 ConsoleHelper.WriteLine($"{Hero.CauseOfDeath}\nYou lost.", ConsoleColor.Red);
         }
 
-        // Gets an 'ICommand' object that represents the player's desires.
+        // Gets an ICommand object that represents the player's desires.
         private ICommand GetCommand()
         {
             ICommand? command = null;
+
             do
             {
                 ConsoleHelper.Write("What do you want to do? ", ConsoleColor.White);
@@ -77,6 +79,7 @@ namespace MinotaurLabyrinth
                     ConsoleHelper.WriteLine($"I did not understand '{input}'.", ConsoleColor.Red);
                 }
             } while (command == null);
+
             return command;
         }
     }
