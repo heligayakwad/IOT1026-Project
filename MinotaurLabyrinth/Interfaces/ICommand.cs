@@ -77,7 +77,10 @@
                 {
                     ConsoleHelper.WriteLine("You've already picked up the sword from this room.", ConsoleColor.Red);
                 }
-                hero.HasSword = true;
+                else
+                {
+                    hero.HasSword = true;
+                }
             }
             else
             {
@@ -86,7 +89,31 @@
         }
     }
 
-    // Displays all the room occurrences - for debugging and testing
+    // A command that represents a request to get a random passive ability from the divine room.
+    public class GetDivineBuff : ICommand
+    {
+        public void Execute(Hero hero, Map map)
+        {
+            if (map.GetRoomTypeAtLocation(hero.Location) == RoomType.Divine)
+            {
+                if (hero.Passive != null)
+                {
+                    ConsoleHelper.WriteLine("You've already picked up the divine buff from this room.", ConsoleColor.Red);
+                }
+                else
+                {
+                    hero.Passive = Divine.GetRandomPassiveAbility();
+                    ConsoleHelper.WriteLine($"You've picked up the divine buff! You now have the {hero.Passive} passive ability.", ConsoleColor.Yellow);
+                }
+            }
+            else
+            {
+                ConsoleHelper.WriteLine("The divine buff is not in this room. There was no effect.", ConsoleColor.Red);
+            }
+        }
+    }
+
+    // A command that displays all the room occurrences - for debugging and testing.
     public class DebugMapCommand : ICommand
     {
         public void Execute(Hero hero, Map map)
@@ -95,6 +122,7 @@
         }
     }
 
+    // A command that represents a request to quit the game.
     public class QuitCommand : ICommand
     {
         public void Execute(Hero hero, Map map)
