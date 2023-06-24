@@ -1,6 +1,6 @@
 ﻿namespace MinotaurLabyrinth
 {
-    // The Minotaur Labyrinth game. Tracks the progression of a single round of gameplay.
+    // The minotaur labyrinth game. Tracks the progression of a single round of gameplay.
     public class LabyrinthGame
     {
         // The map being used by the game.
@@ -12,7 +12,7 @@
         // Looks up what room type the player is currently in.
         public Room CurrentRoom => Map.GetRoomAtLocation(Hero.Location);
 
-        // Initializes a new game round with a specific map size and seed.
+        // Initializes a new game round with a specific map and player.
         public LabyrinthGame(Size mapSize, int seed)
         {
             RandomNumberGenerator.SetSeed(seed);
@@ -48,12 +48,12 @@
             }
 
             if (Hero.IsVictorious)
-                ConsoleHelper.WriteLine("You have claimed the magic sword and you have escaped with your life!\nYou win!", ConsoleColor.DarkGreen);
+                ConsoleHelper.WriteLine("You have claimed the magic sword and escaped with your life!\nYou win!", ConsoleColor.DarkGreen);
             else
                 ConsoleHelper.WriteLine($"{Hero.CauseOfDeath}\nYou lost.", ConsoleColor.Red);
         }
 
-        // Gets an ICommand object that represents the player's desires.
+        // Gets an 'ICommand' object that represents the player's desires.
         private ICommand GetCommand()
         {
             ICommand? command = null;
