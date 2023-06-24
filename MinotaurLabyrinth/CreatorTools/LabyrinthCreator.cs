@@ -1,4 +1,7 @@
-﻿namespace MinotaurLabyrinth
+﻿using System;
+using System.Collections.Generic;
+
+namespace MinotaurLabyrinth
 {
     /// <summary>
     /// A static class that provides methods to create and initialize a labyrinth map with various features, such as an entrance, sword, traps, and monsters.
@@ -7,11 +10,11 @@
     {
         const int ScalingFactor = 16;
         static readonly Dictionary<Size, (int rows, int cols)> _mapSizeDimensions = new()
-    {
-        { Size.Small, (4, 4) },
-        { Size.Medium, (6, 6) },
-        { Size.Large, (8, 8) },
-    };
+        {
+            { Size.Small, (4, 4) },
+            { Size.Medium, (6, 6) },
+            { Size.Large, (8, 8) },
+        };
 
         /// <summary>
         /// Initializes the labyrinth map with the specified size, and creates a new Hero at the entrance location.
@@ -26,16 +29,6 @@
             return (map, InitializePlayer(start));
         }
 
-        private static Map CreateMap(Size mapSize)
-        {
-            if (!_mapSizeDimensions.TryGetValue(mapSize, out var dimensions))
-            {
-                throw new ArgumentException("Unknown map size");
-            }
-
-            return new Map(dimensions.rows, dimensions.cols);
-        }
-
         /// <summary>
         /// Creates a labyrinth map with randomly placed and non-overlapping features, such as the entrance, sword, traps, and monsters.
         /// </summary>
@@ -45,9 +38,25 @@
         {
             Location start = PlaceEntrance(map);
             PlaceSword(map, start);
+            PlaceDivineRoom(map, start);
             AddRooms(RoomType.Pit, map);
             InitializeMonsters(map);
             return start;
+        }
+
+        /// <summary>
+        /// Creates a new instance of Map with the specified size.
+        /// </summary>
+        /// <param name="mapSize">The Size of the map to be created.</param>
+        /// <returns>The initialized Map object.</returns>
+        private static Map CreateMap(Size mapSize)
+        {
+            if (!_mapSizeDimensions.TryGetValue(mapSize, out var dimensions))
+            {
+                throw new ArgumentException("Unknown map size");
+            }
+
+            return new Map(dimensions.rows, dimensions.cols);
         }
 
         /// <summary>
@@ -71,6 +80,17 @@
         {
             Location swordLocation = ProceduralGenerator.GetRandomLocationNotAdjacentTo(start);
             map.SetRoomAtLocation(swordLocation, RoomType.Sword);
+        }
+
+        /// <summary>
+        /// Places the divine room at a random location on the map that is not adjacent to the specified start location.
+        /// </summary>
+        /// <param name="map">The map on which the divine room will be placed.</param>
+        /// <param name="start">The start location to avoid placing the divine room adjacent to.</param>
+        private static void PlaceDivineRoom(Map map, Location start)
+        {
+            Location divineLocation = ProceduralGenerator.GetRandomLocationNotAdjacentTo(start);
+            map.SetRoomAtLocation(divineLocation, RoomType.Divine);
         }
 
         /// <summary>
@@ -104,10 +124,13 @@
         /// <param name="map">The Map in which monsters should be initialized.</param>
         private static void InitializeMonsters(Map map)
         {
-            // Ensure monster locations do not overlap existing locations on the map
             Location minotaurLocation = ProceduralGenerator.GetRandomLocation();
             Room room = map.GetRoomAtLocation(minotaurLocation);
             room.AddMonster(new Minotaur());
+
+            Location mimicLocation = ProceduralGenerator.GetRandomLocation();
+            Room room2 = map.GetRoomAtLocation(mimicLocation);
+            room2.AddMonster(new Mimic());
         }
     }
 }
