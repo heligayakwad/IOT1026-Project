@@ -1,4 +1,7 @@
-﻿namespace MinotaurLabyrinth
+﻿using System;
+using MinotaurLabyrinth.Commands;
+
+namespace MinotaurLabyrinth
 {
     // The minotaur labyrinth game. Tracks the progression of a single round of gameplay.
     public class LabyrinthGame
@@ -11,6 +14,7 @@
 
         // Looks up what room type the player is currently in.
         public Room CurrentRoom => Map.GetRoomAtLocation(Hero.Location);
+
         // Initializes a new game round with a specific map and player.
         public LabyrinthGame(Size mapSize, int seed)
         {
