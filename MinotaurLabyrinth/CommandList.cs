@@ -2,10 +2,7 @@
 
 namespace MinotaurLabyrinth
 {
-    // Container for the command objects and the valid user input to call the corresponding command
-    /// <summary>
-    /// Represents a collection of game commands, allowing commands to be added or removed dynamically throughout the game.
-    /// </summary>
+    // Represents a collection of game commands, allowing commands to be added or removed dynamically throughout the game.
     public class CommandList
     {
         private readonly Dictionary<string, ICommand> _commands = new(StringComparer.OrdinalIgnoreCase);
@@ -18,6 +15,7 @@ namespace MinotaurLabyrinth
             AddCommand(new List<string>() { "e", "east" }, new MoveEastCommand());
             AddCommand(new List<string>() { "w", "west" }, new MoveWestCommand());
             AddCommand(new List<string>() { "g", "grab sword" }, new GetSwordCommand());
+            AddCommand(new List<string>() { "ir", "inspect room" }, new GetDivineBuff());
             AddCommand(new List<string>() { "q", "quit" }, new QuitCommand());
             AddCommand(new List<string>() { "secret" }, new SecretCommand());
             AddCommand(new List<string>() { "d", "debug" }, new DebugMapCommand());
