@@ -49,13 +49,21 @@
         }
     }
 
+    // Represents the details to display on the screen, including text and color.
     public record DisplayDetails(string Text, System.ConsoleColor Color);
+
     // Represents a location in the 2D game world, based on its row and column.
     public record Location(int Row, int Column);
+
     // Represents one of the four directions of movement.
     public enum Direction { North, South, West, East }
+
     // Represents the size of the game map.
     public enum Size { Small, Medium, Large };
-    // Must match class names for dynamic registering to work properly - not ideal.
-    public enum RoomType { Room, Entrance, Sword, Wall, Pit }
+
+    // Represents the type of a room.
+    public enum RoomType { Room, Entrance, Sword, Wall, Pit, Divine }
+
+    // Represents the type of a passive ability.
+    public enum PassiveAbility { DivineProtection, IronWill, Parry }
 }
