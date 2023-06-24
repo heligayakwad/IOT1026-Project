@@ -1,33 +1,46 @@
 ﻿namespace MinotaurLabyrinth
 {
-    public class Entrance : Room
+    // Represents a divine room in the labyrinth.
+    public class Divine : Room
     {
-        static Entrance()
+        static Divine()
         {
-            RoomFactory.Instance.Register(RoomType.Entrance, () => new Entrance());
-        }
-        public override RoomType Type { get; } = RoomType.Entrance;
-        public override bool IsActive { get; protected set; } = true;
-        public override void Activate(Hero hero, Map map)
-        {
-            if (hero.HasSword)
-                hero.IsVictorious = true;
-        }
-        public override DisplayDetails Display()
-        {
-            return new DisplayDetails($"[{Type.ToString()[0]}]", ConsoleColor.DarkGreen);
+            RoomFactory.Instance.Register(RoomType.Divine, () => new Divine());
         }
 
-        // Displays the appropriate message if the player can see the light from outside the labyrinth
+        public override RoomType Type { get; } = RoomType.Divine;
+
+        // Returns the display details of the divine room.
+        public override DisplayDetails Display()
+        {
+            return new DisplayDetails($"[{Type.ToString()[0]}]", ConsoleColor.Yellow);
+        }
+
+        // Generates a random passive ability for the player.
+        public static PassiveAbility GetRandomPassiveAbility()
+        {
+            int random = RandomNumberGenerator.Next(1, 5);
+            return random switch
+            {
+                1 => PassiveAbility.IronWill,
+                2 => PassiveAbility.DivineProtection,
+                3 => PassiveAbility.Parry,
+                4 => PassiveAbility.NullifyDeath
+            };
+        }
+
+        // Displays the sense information for the divine room.
         public override bool DisplaySense(Hero hero, int heroDistance)
         {
             if (heroDistance == 0)
-                ConsoleHelper.WriteLine("You see light in this room coming from outside the labyrinth. This is the entrance.", ConsoleColor.Yellow);
-            else if (heroDistance == 1)
-                ConsoleHelper.WriteLine("You hear birds chirping faintly in the distance. An entrance should be nearby.", ConsoleColor.Yellow);
-            else
-                return false;
-            return true;
+            {
+                if (hero.Passive != null)
+                    ConsoleHelper.WriteLine("This is the divine room, but you've already picked up the ability!", ConsoleColor.Yellow);
+                else
+                    ConsoleHelper.WriteLine("You can sense a divine presence in the room!", ConsoleColor.Yellow);
+                return true;
+            }
+            return false;
         }
     }
 }
